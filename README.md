@@ -1,15 +1,13 @@
-# About
+# Prerequisite
 
+This requires that you have the [thrift compiler](https://thrift.apache.org/download) properly installed on your system.
 
-# Prerequisites
+# Building
 
-
-# Build
-
-
-# Configure
-
+    $ src/main/thrift/gencode.sh
+    $ mvn clean install
     
-# Run
+# Running
 
-
+    $ cd target/
+    $ java -cp dependency/*:./testartifact-1.0-SNAPSHOT.jar com.force.Main
