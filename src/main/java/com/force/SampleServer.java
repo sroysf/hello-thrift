@@ -1,7 +1,7 @@
 package com.force;
 
-import com.force.ser.simple.Item;
-import com.force.ser.simple.ListItemService;
+import com.force.ser.Item;
+import com.force.ser.ListItemService;
 import org.apache.thrift.TException;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
