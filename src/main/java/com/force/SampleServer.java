@@ -1,7 +1,7 @@
 package com.force;
 
-import com.force.ser.simple.CrawlingService;
 import com.force.ser.simple.Item;
+import com.force.ser.simple.ListItemService;
 import org.apache.thrift.TException;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by sroy on 12/30/15.
  */
-public class SampleServer implements CrawlingService.Iface {
+public class SampleServer implements ListItemService.Iface {
 
     private static Logger logger = LoggerFactory.getLogger(SampleServer.class);
 
@@ -32,7 +32,7 @@ public class SampleServer implements CrawlingService.Iface {
     public void start() {
 
         try {
-            CrawlingService.Processor<SampleServer> processor = new CrawlingService.Processor(this);
+            ListItemService.Processor<SampleServer> processor = new ListItemService.Processor(this);
 
             TServerTransport serverTransport = new TServerSocket(9090);
             TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));

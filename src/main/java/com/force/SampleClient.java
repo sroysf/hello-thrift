@@ -1,7 +1,7 @@
 package com.force;
 
-import com.force.ser.simple.CrawlingService;
 import com.force.ser.simple.Item;
+import com.force.ser.simple.ListItemService;
 import org.apache.thrift.TDeserializer;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
@@ -32,7 +32,7 @@ public class SampleClient {
             TTransport transport = new TSocket("localhost", 9090);
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
-            CrawlingService.Client client = new CrawlingService.Client(protocol);
+            ListItemService.Client client = new ListItemService.Client(protocol);
 
 
             TBinaryProtocol.Factory protocolFactory = new TBinaryProtocol.Factory();

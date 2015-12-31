@@ -5,6 +5,6 @@ struct Item {
   2: string content,
 }
 
-service CrawlingService {
+service ListItemService {
     void write(1:list<Item> items),
 }
