@@ -1,13 +1,31 @@
 package com.force;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    private static Logger logger = LoggerFactory.getLogger(Main.class);
+    public static void main(String[] args) throws Exception {
+        System.out.println("Starting server...");
+        SampleServer server = new SampleServer();
+        SampleClient client = new SampleClient();
 
-    public static void main(String[] args) {
-        logger.info("Hello world");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                server.start();
+            }
+        }).start();
+
+        TimeUnit.SECONDS.sleep(2);
+
+        Thread clientThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                client.start();
+            }
+        });
+
+        clientThread.start();
+        clientThread.join();
     }
 }
