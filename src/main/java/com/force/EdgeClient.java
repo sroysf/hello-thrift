@@ -4,7 +4,6 @@ import com.force.thrift.*;
 import com.force.txnlog.MessageTypeRegistry;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TDeserializer;
-import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -14,9 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -56,7 +53,7 @@ public class EdgeClient {
                     continue;
                 }
 
-                
+
                 for (MessageEnvelope messageEnvelope : transactionList.getEnvelopes()) {
                     short typeId = messageEnvelope.getTypeId();
                     Class<? extends TBase> msgClass = MessageTypeRegistry.getClassFromId(typeId);
@@ -98,5 +95,22 @@ public class EdgeClient {
         } else {
             logger.warn("{} - Unknown message type: " + genericMessage.getClass().getName());
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        EdgeClient client = new EdgeClient();
+
+        TimeUnit.SECONDS.sleep(2);
+
+        Thread clientThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                client.start();
+            }
+        });
+
+        logger.info("Starting client, following server transaction log...");
+        clientThread.start();
+        clientThread.join();
     }
 }

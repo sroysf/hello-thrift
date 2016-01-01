@@ -8,6 +8,8 @@ import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
+import org.apache.thrift.server.TThreadPoolServer;
+import org.apache.thrift.server.TThreadedSelectorServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -50,7 +52,10 @@ public class EdgeServer implements EdgeControlAPI.Iface {
             EdgeControlAPI.Processor<EdgeServer> processor = new EdgeControlAPI.Processor(this);
 
             TServerTransport serverTransport = new TServerSocket(9090);
-            TServer server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));
+            TThreadPoolServer server = new TThreadPoolServer(
+                    new TThreadPoolServer.Args(serverTransport)
+                    .processor(processor)
+                    .maxWorkerThreads(5));
             System.out.println("Starting edge server...");
             server.serve();
 
@@ -79,7 +84,7 @@ public class EdgeServer implements EdgeControlAPI.Iface {
     private void writeMessageLoop() {
         TBase msg = null;
 
-        int rebootCounter = 0;
+        int msgCount = 0;
 
         while (true) {
             String emId = "EM:" + (int)(25000 * Math.random());
@@ -118,15 +123,30 @@ public class EdgeServer implements EdgeControlAPI.Iface {
             try {
                 TimeUnit.SECONDS.sleep(1);
                 this.messageLog.append(msg);
+                logger.info("{} - {}", msgCount, msg.getClass().getName());
 
-                rebootCounter++;
-                if (rebootCounter >= 30) {
-                    rebootCounter = 0;
+                msgCount++;
+                if (msgCount >= 120) {
+                    msgCount = 0;
                     simulateReboot();
                 }
             } catch (Exception e) {
                 logger.warn("", e);
             }
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        EdgeServer server = new EdgeServer();
+
+        Thread serverThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                server.start();
+            }
+        });
+
+        serverThread.start();
+        serverThread.join();
     }
 }

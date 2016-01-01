@@ -9,5 +9,14 @@ This requires that you have the [thrift compiler](https://thrift.apache.org/down
     
 # Running
 
+## In one window, start the server...
+
     $ cd target/
-    $ java -cp dependency/*:./testartifact-1.0-SNAPSHOT.jar com.force.Main
+    $ java -cp dependency/*:./testartifact-1.0-SNAPSHOT.jar com.force.EdgeServer
+
+## In several other windows, start some clients
+
+    $ cd target/
+    $ java -cp dependency/*:./testartifact-1.0-SNAPSHOT.jar com.force.EdgeClient
+
+
