@@ -41,10 +41,22 @@ public class EdgeClient {
             deserializer = new TDeserializer(protocolFactory);
 
             int checkPoint = 0;
+            String knownUniqueId = null;
+
             while (true) {
                 TimeUnit.SECONDS.sleep(5);
 
                 TransactionList transactionList = client.playbackTransactions(checkPoint, 100);
+                if (knownUniqueId == null) {
+                    knownUniqueId = transactionList.getUniqueLogId();
+                } else if (!transactionList.getUniqueLogId().equals(knownUniqueId)) {
+                    logger.info("\nClient detected server restart, new transaction log!\n");
+                    checkPoint = 0;
+                    knownUniqueId = transactionList.getUniqueLogId();
+                    continue;
+                }
+
+                
                 for (MessageEnvelope messageEnvelope : transactionList.getEnvelopes()) {
                     short typeId = messageEnvelope.getTypeId();
                     Class<? extends TBase> msgClass = MessageTypeRegistry.getClassFromId(typeId);

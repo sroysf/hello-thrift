@@ -27,7 +27,7 @@ public class EdgeServer implements EdgeControlAPI.Iface {
     private static Logger logger = LoggerFactory.getLogger(EdgeServer.class);
 
     private MessageLog messageLog = new MemoryLog();
-    private final String uniqueId = UUID.randomUUID().toString();
+    private String uniqueId = UUID.randomUUID().toString();
 
     @Override
     public TransactionList playbackTransactions(int start, int maxTransactions) throws TException {
@@ -69,8 +69,17 @@ public class EdgeServer implements EdgeControlAPI.Iface {
         }).start();
     }
 
+    private void simulateReboot() {
+        logger.info("**************** SERVER REBOOTING!!! **************");
+
+        this.messageLog = new MemoryLog();
+        this.uniqueId = UUID.randomUUID().toString();
+    }
+
     private void writeMessageLoop() {
         TBase msg = null;
+
+        int rebootCounter = 0;
 
         while (true) {
             String emId = "EM:" + (int)(25000 * Math.random());
@@ -109,6 +118,12 @@ public class EdgeServer implements EdgeControlAPI.Iface {
             try {
                 TimeUnit.SECONDS.sleep(1);
                 this.messageLog.append(msg);
+
+                rebootCounter++;
+                if (rebootCounter >= 30) {
+                    rebootCounter = 0;
+                    simulateReboot();
+                }
             } catch (Exception e) {
                 logger.warn("", e);
             }
