@@ -7,4 +7,5 @@
 target
 src/main/resources/server.props
 *launch.sh
+src/main/java/com/force/thrift/*
 
