@@ -5,9 +5,8 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Starting server...");
-        SampleServer server = new SampleServer();
-        SampleClient client = new SampleClient();
+        EdgeServer server = new EdgeServer();
+        EdgeClient client = new EdgeClient();
 
         new Thread(new Runnable() {
             @Override

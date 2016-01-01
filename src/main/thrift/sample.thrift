@@ -1,16 +1,6 @@
-namespace java com.force.ser
+namespace java com.force.thrift
 
-// ========== Hello world RPC example objects =========
-struct Item {
-  1: i64 id,
-  2: string content,
-}
-
-service ListItemService {
-    void write(1:list<Item> items),
-}
-
-// ========== Transaction log proof events =========
+// ========== Transaction log events =========
 
 struct FoundEdgeMartEvent {
   1: string emId,
@@ -36,6 +26,10 @@ struct AccessTimeUpdatedEdgeMartEvent {
 }
 
 // ========== Transaction log RPC request/response types =========
+
+service EdgeControlAPI {
+    TransactionList playbackTransactions(1:i32 start, 2:i32 maxTransactions),
+}
 
 struct MessageEnvelope {
   1: i16 typeId,
